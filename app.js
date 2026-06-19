@@ -1748,6 +1748,12 @@ function vincularEventos() {
 
   document.getElementById('btn-remove-logo')?.addEventListener('click', quitarLogo);
 
+  // Importar JSON desde pantalla de setup (app recién abierta sin datos)
+  document.getElementById('input-importar-setup')?.addEventListener('change', e => {
+    importarJSON(e.target.files[0]);
+    e.target.value = '';
+  });
+
   // ── EQUIPOS ──
   document.getElementById('btn-modo-aleatorio')?.addEventListener('click', () => {
     _modoEquipos = 'aleatorio';

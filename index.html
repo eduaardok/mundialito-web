@@ -135,6 +135,20 @@
       <button id="btn-confirmar-jugadores" class="btn-primary w-full" disabled>
         <i class="fa-solid fa-check mr-2"></i>Confirmar jugadores
       </button>
+
+      <!-- Separador -->
+      <div class="flex items-center gap-3 my-6">
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+        <span class="text-xs font-bold uppercase tracking-widest" style="color:var(--gray-text)">o</span>
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+      </div>
+
+      <!-- Importar torneo existente -->
+      <label for="input-importar-setup" class="btn-secondary w-full cursor-pointer flex items-center justify-center gap-2">
+        <i class="fa-solid fa-file-import"></i>Cargar torneo desde JSON
+      </label>
+      <input type="file" id="input-importar-setup" accept=".json" class="hidden" />
+      <p class="text-center text-xs mt-2" style="color:var(--gray-text)">Si alguien te compartió el estado del torneo</p>
     </section>
 
     <!-- ======================================================
