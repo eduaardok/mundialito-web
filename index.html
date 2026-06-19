@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Torneo Amigos FC 26</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:       '#07090f',
+            gold:       '#c9a84c',
+            'gold-light':'#e8c96d',
+            accent:     '#e0182d',
+            'wc-red':   '#e0182d',
+            'wc-blue':  '#0052c8',
+            'wc-green': '#00a64e',
+          },
+          fontFamily: {
+            bebas: ['"Bebas Neue"', 'cursive'],
+            inter: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body class="font-inter bg-navy text-white min-h-screen">
+
+  <!-- ===== HEADER ===== -->
+  <header id="app-header" class="app-header fixed top-0 left-0 right-0 z-40 hidden">
+    <div class="header-inner flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div id="header-logo-wrap" class="hidden">
+          <img id="header-logo" src="" alt="Logo" class="w-10 h-10 object-cover rounded-full border-2 border-gold" />
+        </div>
+        <div class="min-w-0">
+          <h1 id="header-title" class="font-bebas text-2xl text-gold tracking-wider truncate leading-none">TORNEO FC 26</h1>
+          <p id="header-phase" class="text-xs text-gray-400 leading-none mt-0.5">Configuración</p>
+        </div>
+      </div>
+      <button id="btn-theme-toggle" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors" aria-label="Cambiar tema">
+        <i class="fa-solid fa-moon text-gold"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main id="app-main" class="pb-20">
+
+    <!-- ======================================================
+         PANTALLA 0 — SETUP INICIAL
+    ====================================================== -->
+    <section id="screen-setup" class="screen active px-4 pt-8 pb-6">
+      <div class="setup-hero text-center mb-8">
+        <div class="trophy-icon mb-4">
+          <i class="fa-solid fa-trophy text-6xl text-gold drop-shadow-lg"></i>
+        </div>
+        <h2 class="font-bebas text-5xl text-white tracking-widest leading-none">CREA TU</h2>
+        <h2 class="font-bebas text-5xl text-gold tracking-widest leading-none">TORNEO</h2>
+      </div>
+
+      <!-- Nombre del torneo -->
+      <div class="form-group mb-5">
+        <label class="form-label" for="input-torneo-nombre">Nombre del torneo</label>
+        <input
+          type="text"
+          id="input-torneo-nombre"
+          class="form-input"
+          placeholder="Ej: Copa Amigos 2026"
+          maxlength="40"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Logo -->
+      <div class="form-group mb-5">
+        <label class="form-label">Logo del torneo (opcional)</label>
+        <label for="input-logo" class="logo-upload-area cursor-pointer block">
+          <div id="logo-preview-wrap" class="text-center">
+            <i class="fa-solid fa-image text-3xl text-gold/50 mb-2"></i>
+            <p class="text-sm text-gray-400">Toca para subir imagen</p>
+          </div>
+          <img id="logo-preview-img" src="" alt="Logo" class="hidden w-24 h-24 object-cover rounded-full mx-auto border-4 border-gold" />
+        </label>
+        <input type="file" id="input-logo" accept="image/*" class="hidden" />
+        <button id="btn-remove-logo" class="hidden mt-2 text-xs text-red-400 underline w-full text-center">Quitar logo</button>
+      </div>
+
+      <!-- Cantidad de jugadores -->
+      <div class="form-group mb-5">
+        <label class="form-label" for="input-num-jugadores">Cantidad de jugadores</label>
+        <div class="flex items-center gap-3">
+          <button id="btn-jugadores-menos" class="counter-btn" aria-label="Reducir jugadores">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <input
+            type="number"
+            id="input-num-jugadores"
+            class="form-input text-center text-2xl font-bebas w-20"
+            value="4"
+            min="4"
+            max="32"
+            readonly
+          />
+          <button id="btn-jugadores-mas" class="counter-btn" aria-label="Agregar jugadores">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de jugadores -->
+      <div class="form-group mb-6">
+        <label class="form-label">Jugadores</label>
+        <div id="lista-jugadores" class="space-y-2"></div>
+      </div>
+
+      <button id="btn-confirmar-jugadores" class="btn-primary w-full" disabled>
+        <i class="fa-solid fa-check mr-2"></i>Confirmar jugadores
+      </button>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA 0b — ASIGNAR EQUIPOS
+    ====================================================== -->
+    <section id="screen-equipos" class="screen px-4 pt-6 pb-6">
+      <div class="section-header mb-6">
+        <h2 class="font-bebas text-3xl text-gold tracking-wider">ASIGNAR EQUIPOS</h2>
+        <p class="text-gray-400 text-sm mt-1">Elige cómo asignar los equipos de FC 26</p>
+      </div>
+
+      <!-- Modo de asignación -->
+      <div class="flex gap-3 mb-6">
+        <button id="btn-modo-aleatorio" class="mode-btn active flex-1">
+          <i class="fa-solid fa-shuffle mr-2"></i>Aleatorio
+        </button>
+        <button id="btn-modo-manual" class="mode-btn flex-1">
+          <i class="fa-solid fa-hand-pointer mr-2"></i>Manual
+        </button>
+      </div>
+
+      <!-- Botón sortear (modo aleatorio) -->
+      <div id="sortear-equipos-wrap" class="mb-4">
+        <button id="btn-sortear-equipos" class="btn-sortear-equipos">
+          <i class="fa-solid fa-futbol fa-spin-pulse mr-2"></i>Sortear equipos
+        </button>
+      </div>
+
+      <!-- Lista de asignación -->
+      <div id="lista-asignacion-equipos" class="space-y-3 mb-6"></div>
+
+      <!-- Equipos extra -->
+      <div id="equipos-extra-section" class="hidden mb-4">
+        <p class="text-sm text-yellow-400 mb-2">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+          Hay más jugadores que equipos en el pool. Añade equipos adicionales:
+        </p>
+        <div class="flex gap-2">
+          <input type="text" id="input-equipo-extra" class="form-input flex-1" placeholder="Nombre del equipo" />
+          <button id="btn-add-equipo-extra" class="btn-secondary px-4">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+        <div id="equipos-extra-lista" class="mt-2 space-y-1"></div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="btn-back-setup" class="btn-secondary flex-1">
+          <i class="fa-solid fa-arrow-left mr-2"></i>Atrás
+        </button>
+        <button id="btn-confirmar-equipos" class="btn-primary flex-1">
+          Continuar<i class="fa-solid fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA 1 — CONFIGURACIÓN DE GRUPOS
+    ====================================================== -->
+    <section id="screen-grupos-config" class="screen px-4 pt-6 pb-6">
+      <div class="section-header mb-6">
+        <h2 class="font-bebas text-3xl text-gold tracking-wider">CONFIGURAR GRUPOS</h2>
+        <p class="text-gray-400 text-sm mt-1">Define la estructura de la fase de grupos</p>
+      </div>
+
+      <!-- Distribución sugerida -->
+      <div id="sugerencia-grupos" class="info-card mb-5"></div>
+
+      <!-- Cantidad de grupos -->
+      <div class="form-group mb-4">
+        <label class="form-label" for="input-num-grupos">Cantidad de grupos</label>
+        <div class="flex items-center gap-3">
+          <button id="btn-grupos-menos" class="counter-btn"><i class="fa-solid fa-minus"></i></button>
+          <input type="number" id="input-num-grupos" class="form-input text-center text-2xl font-bebas w-20" value="2" min="1" readonly />
+          <button id="btn-grupos-mas" class="counter-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+
+      <!-- Jugadores por grupo -->
+      <div class="form-group mb-5">
+        <label class="form-label" for="input-por-grupo">Equipos por grupo</label>
+        <div id="distribucion-grupos" class="text-sm text-gray-300 bg-white/5 rounded-xl p-3"></div>
+      </div>
+
+      <!-- Cabezas de grupo -->
+      <div class="form-group mb-5">
+        <label class="form-label">Cabezas de grupo (opcional)</label>
+        <p class="text-xs text-gray-400 mb-2">Selecciona un jugador por grupo para fijarlos primero</p>
+        <div id="lista-cabezas" class="space-y-2"></div>
+      </div>
+
+      <!-- Modo sorteo / manual -->
+      <div class="flex gap-3 mb-5">
+        <button id="btn-modo-sorteo" class="mode-btn active flex-1">
+          <i class="fa-solid fa-dice mr-2"></i>Sorteo
+        </button>
+        <button id="btn-modo-manual-grupos" class="mode-btn flex-1">
+          <i class="fa-solid fa-list mr-2"></i>Manual
+        </button>
+      </div>
+
+      <!-- Asignación manual de grupos -->
+      <div id="asignacion-manual-grupos" class="hidden mb-5">
+        <div id="grupos-manual-container" class="space-y-4"></div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="btn-back-equipos" class="btn-secondary flex-1">
+          <i class="fa-solid fa-arrow-left mr-2"></i>Atrás
+        </button>
+        <button id="btn-realizar-sorteo" class="btn-primary flex-1">
+          <i class="fa-solid fa-shuffle mr-2"></i>Realizar sorteo
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA 2 — FASE DE GRUPOS
+    ====================================================== -->
+    <section id="screen-fase-grupos" class="screen px-4 pt-6 pb-6">
+      <div class="section-header mb-4">
+        <h2 class="font-bebas text-3xl text-gold tracking-wider">FASE DE GRUPOS</h2>
+      </div>
+      <div id="grupos-tabs" class="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide"></div>
+      <div id="grupos-content" class="space-y-4"></div>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA 3 — CLASIFICADOS
+    ====================================================== -->
+    <section id="screen-clasificados" class="screen px-4 pt-6 pb-6">
+      <div class="section-header mb-4">
+        <h2 class="font-bebas text-3xl text-gold tracking-wider">CLASIFICADOS</h2>
+        <p class="text-gray-400 text-sm mt-1">Arma los cruces de la fase eliminatoria</p>
+      </div>
+
+      <!-- Selección rápida -->
+      <div class="form-group mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <label class="form-label mb-0">Selecciona quiénes avanzan</label>
+          <span id="clasificados-count" class="text-sm font-bold" style="color:var(--blue)">0 seleccionados</span>
+        </div>
+        <div class="flex gap-2 flex-wrap mb-3">
+          <button class="btn-clasificados-num" data-n="2">Top 2</button>
+          <button class="btn-clasificados-num" data-n="4">Top 4</button>
+          <button class="btn-clasificados-num" data-n="8">Top 8</button>
+          <button class="btn-clasificados-num" data-n="16">Top 16</button>
+          <button class="btn-clasificados-num" data-n="all">Todos</button>
+        </div>
+        <p class="text-xs mb-2" style="color:var(--gray-text)">O toca cada jugador para seleccionarlo/deseleccionarlo manualmente</p>
+        <!-- Lista con checkboxes -->
+        <div id="tabla-clasificados" class="card-glass"></div>
+        <div id="clasificados-warning" class="info-card mt-3 hidden">
+          <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+          <span id="clasificados-warning-msg"></span>
+        </div>
+      </div>
+
+      <!-- Botón armar cruces -->
+      <button id="btn-armar-cruces" class="btn-success w-full mb-5 hidden">
+        <i class="fa-solid fa-sitemap mr-2"></i>Armar cruces
+      </button>
+
+      <!-- Armado de cruces -->
+      <div id="cruces-setup" class="hidden">
+        <label class="form-label mb-3">Definir cruces</label>
+        <p class="text-xs mb-3" style="color:var(--gray-text)">Asigna a cada jugador su rival. Cada jugador puede aparecer en un solo cruce.</p>
+        <div id="cruces-container" class="space-y-3 mb-4"></div>
+        <div id="cruces-validation" class="info-card hidden" style="background:var(--red-dim);border-color:rgba(224,24,45,0.3);color:#ff7080;">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+          <span id="cruces-validation-msg"></span>
+        </div>
+      </div>
+
+      <button id="btn-confirmar-clasificados" class="btn-primary w-full mt-4 hidden">
+        <i class="fa-solid fa-flag-checkered mr-2"></i>Iniciar eliminación directa
+      </button>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA 4 — FASE ELIMINATORIA
+    ====================================================== -->
+    <section id="screen-eliminacion" class="screen px-4 pt-6 pb-6">
+      <div class="section-header mb-4">
+        <h2 class="font-bebas text-3xl text-gold tracking-wider">ELIMINACIÓN DIRECTA</h2>
+      </div>
+
+      <!-- Selector de ronda -->
+      <div id="rondas-tabs" class="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide"></div>
+
+      <!-- Bracket visual -->
+      <div id="bracket-container" class="bracket-wrap"></div>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA 5 — DASHBOARD
+    ====================================================== -->
+    <section id="screen-dashboard" class="screen px-4 pt-6 pb-6">
+      <!-- Estado del torneo -->
+      <div id="dashboard-estado" class="card-glass mb-4 p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+            <i class="fa-solid fa-circle-info text-gold"></i>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 uppercase tracking-wider">Estado actual</p>
+            <p id="dashboard-fase-texto" class="font-semibold text-white">Configuración</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campeón (oculto hasta que termine) -->
+      <div id="dashboard-campeon" class="hidden">
+        <div class="campeon-card mb-4">
+          <canvas id="confetti-canvas" class="absolute inset-0 pointer-events-none"></canvas>
+          <div class="relative z-10 text-center py-6 px-4">
+            <i class="fa-solid fa-trophy text-5xl text-gold mb-3"></i>
+            <p class="font-bebas text-4xl text-gold tracking-widest glow-gold">CAMPEÓN</p>
+            <p id="campeon-nombre" class="font-bebas text-3xl text-white mt-1"></p>
+            <p id="campeon-equipo" class="text-gold/70 text-sm mt-1"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tablas de grupos resumidas -->
+      <div id="dashboard-grupos" class="mb-4"></div>
+
+      <!-- Llave de eliminación resumida -->
+      <div id="dashboard-llave" class="mb-4"></div>
+    </section>
+
+    <!-- ======================================================
+         PANTALLA CONFIG
+    ====================================================== -->
+    <section id="screen-config" class="screen px-4 pt-6 pb-6">
+      <div class="section-header mb-6">
+        <h2 class="font-bebas text-3xl text-gold tracking-wider">CONFIGURACIÓN</h2>
+      </div>
+
+      <!-- Info del torneo -->
+      <div class="card-glass p-4 mb-5">
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Torneo activo</p>
+        <p id="config-torneo-nombre" class="font-semibold text-white">—</p>
+        <p id="config-torneo-fase" class="text-sm text-gray-400 mt-0.5">—</p>
+      </div>
+
+      <!-- Tema -->
+      <div class="card-glass p-4 mb-5 flex items-center justify-between">
+        <div>
+          <p class="font-medium text-white">Tema oscuro</p>
+          <p class="text-xs text-gray-400">Cambiar entre claro y oscuro</p>
+        </div>
+        <button id="btn-theme-config" class="toggle-switch" aria-label="Toggle tema" role="switch" aria-checked="true">
+          <span class="toggle-thumb"></span>
+        </button>
+      </div>
+
+      <!-- Exportar / Importar -->
+      <div class="card-glass p-4 mb-5 space-y-3">
+        <p class="font-medium text-white mb-1">Datos del torneo</p>
+        <button id="btn-exportar" class="btn-secondary w-full">
+          <i class="fa-solid fa-download mr-2"></i>Exportar JSON
+        </button>
+        <label for="input-importar" class="btn-secondary w-full cursor-pointer flex items-center justify-center gap-2">
+          <i class="fa-solid fa-upload"></i>Importar JSON
+        </label>
+        <input type="file" id="input-importar" accept=".json" class="hidden" />
+        <button id="btn-compartir" class="btn-secondary w-full">
+          <i class="fa-solid fa-share-nodes mr-2"></i>Copiar resumen
+        </button>
+      </div>
+
+      <!-- Reiniciar -->
+      <div class="card-glass p-4 border border-red-500/30">
+        <p class="font-medium text-red-400 mb-1">Zona de peligro</p>
+        <p class="text-xs text-gray-400 mb-3">Esta acción borrará todos los datos del torneo.</p>
+        <button id="btn-reiniciar" class="btn-danger w-full">
+          <i class="fa-solid fa-rotate-left mr-2"></i>Reiniciar torneo
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav id="bottom-nav" class="bottom-nav fixed bottom-0 left-0 right-0 z-40 hidden">
+    <button class="nav-tab" data-tab="dashboard" aria-label="Inicio">
+      <i class="fa-solid fa-house"></i>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-tab" data-tab="fase-grupos" aria-label="Grupos">
+      <i class="fa-solid fa-users"></i>
+      <span>Grupos</span>
+    </button>
+    <button class="nav-tab" data-tab="eliminacion" aria-label="Llave">
+      <i class="fa-solid fa-trophy"></i>
+      <span>Llave</span>
+    </button>
+    <button class="nav-tab" data-tab="config" aria-label="Config">
+      <i class="fa-solid fa-gear"></i>
+      <span>Config</span>
+    </button>
+  </nav>
+
+  <!-- ===== MODAL SORTEO ===== -->
+  <div id="modal-sorteo" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Sorteo de grupos">
+    <div class="modal-box text-center px-6 py-8">
+      <div id="sorteo-bombo" class="sorteo-bombo mx-auto mb-6">
+        <div class="bombo-inner">
+          <i class="fa-solid fa-circle-nodes text-5xl text-gold"></i>
+        </div>
+      </div>
+      <p id="sorteo-msg" class="font-bebas text-2xl text-white tracking-wider mb-2">REALIZANDO SORTEO</p>
+      <p id="sorteo-sub" class="text-gray-400 text-sm mb-6">Asignando jugadores a grupos...</p>
+      <div id="sorteo-resultado" class="space-y-3 text-left"></div>
+      <button id="btn-sorteo-confirmar" class="btn-primary w-full mt-6 hidden">
+        <i class="fa-solid fa-check mr-2"></i>Confirmar sorteo
+      </button>
+      <button id="btn-sorteo-cancelar" class="btn-secondary w-full mt-2">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL RESULTADO ===== -->
+  <div id="modal-resultado" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Registrar resultado">
+    <div class="modal-box px-6 py-6">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-bebas text-xl text-gold tracking-wider">RESULTADO</h3>
+        <button id="btn-close-resultado" class="modal-close-btn" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="resultado-partido-info" class="text-center mb-5"></div>
+      <div class="flex items-center gap-4 mb-5">
+        <div class="flex-1 text-center">
+          <p id="resultado-local-nombre" class="text-sm text-gray-300 truncate mb-2"></p>
+          <input type="number" id="input-goles-local" class="score-input" value="0" min="0" max="99" />
+        </div>
+        <div class="text-2xl font-bebas text-gold">VS</div>
+        <div class="flex-1 text-center">
+          <p id="resultado-visitante-nombre" class="text-sm text-gray-300 truncate mb-2"></p>
+          <input type="number" id="input-goles-visitante" class="score-input" value="0" min="0" max="99" />
+        </div>
+      </div>
+      <!-- Penales (solo eliminación) -->
+      <div id="penales-section" class="hidden mb-4">
+        <p class="text-sm text-yellow-400 mb-2">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>Empate — define por penales:
+        </p>
+        <div class="flex gap-3">
+          <button id="btn-penal-local" class="penal-btn flex-1" data-winner="local">
+            <span id="penal-local-text"></span> gana penales
+          </button>
+          <button id="btn-penal-visitante" class="penal-btn flex-1" data-winner="visitante">
+            <span id="penal-visitante-text"></span> gana penales
+          </button>
+        </div>
+      </div>
+      <button id="btn-guardar-resultado" class="btn-primary w-full">
+        <i class="fa-solid fa-floppy-disk mr-2"></i>Guardar resultado
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CONFIRMACIÓN ===== -->
+  <div id="modal-confirm" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-box px-6 py-6 text-center">
+      <div class="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+        <i class="fa-solid fa-triangle-exclamation text-2xl text-red-400"></i>
+      </div>
+      <h3 id="modal-confirm-title" class="font-bebas text-2xl text-white tracking-wider mb-2">¿ESTÁS SEGURO?</h3>
+      <p id="modal-confirm-msg" class="text-gray-400 text-sm mb-6">Esta acción no se puede deshacer.</p>
+      <div class="flex gap-3">
+        <button id="btn-confirm-cancel" class="btn-secondary flex-1">Cancelar</button>
+        <button id="btn-confirm-ok" class="btn-danger flex-1">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL SORTEO EQUIPOS ===== -->
+  <div id="modal-sorteo-equipos" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Sorteo de equipos">
+    <div class="modal-box text-center px-6 py-8">
+      <div id="sorteo-eq-bombo" class="sorteo-bombo eq mx-auto mb-5">
+        <div class="bombo-inner">
+          <i class="fa-solid fa-futbol text-5xl" style="color:var(--red)"></i>
+        </div>
+      </div>
+      <p id="sorteo-eq-msg" class="font-bebas text-2xl tracking-wider mb-1" style="color:var(--white)">SORTEANDO EQUIPOS</p>
+      <p id="sorteo-eq-sub" class="text-sm mb-5" style="color:var(--gray-text)">Asignando equipos de FC 26...</p>
+      <div id="sorteo-eq-resultado" class="space-y-2 text-left mb-5 max-h-56 overflow-y-auto scrollbar-hide"></div>
+      <div class="flex gap-3">
+        <button id="btn-sorteo-eq-repetir" class="btn-secondary flex-1 hidden">
+          <i class="fa-solid fa-rotate-right mr-2"></i>Repetir
+        </button>
+        <button id="btn-sorteo-eq-confirmar" class="btn-success flex-1 hidden">
+          <i class="fa-solid fa-check mr-2"></i>Confirmar
+        </button>
+      </div>
+      <button id="btn-sorteo-eq-cancelar" class="btn-secondary w-full mt-2">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
